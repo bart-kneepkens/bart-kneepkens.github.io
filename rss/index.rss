@@ -1,4 +1,4 @@
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0"><channel><title>The programming notebook</title><description>I share things that puzzled me at first. I hope to help by sharing my knowledge.</description><link>http://localhost:2368/</link><generator>Ghost 0.7</generator><lastBuildDate>Mon, 18 Apr 2016 11:53:17 GMT</lastBuildDate><atom:link href="http://localhost:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>Using a Glassfish 4 JDBCRealm for basic user authorization</title><description>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0"><channel><title>The programming notebook</title><description>I share things that puzzled me at first. I hope to help by sharing my knowledge.</description><link>http://localhost:2368/</link><generator>Ghost 0.7</generator><lastBuildDate>Mon, 18 Apr 2016 11:57:16 GMT</lastBuildDate><atom:link href="http://localhost:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>Using a Glassfish 4 JDBCRealm for basic user authorization</title><description>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;Preparing the database  &lt;/li&gt;
@@ -145,7 +145,7 @@ If you don't have a &lt;code&gt;web.xml&lt;/code&gt;, you can generate it from N
 
 &lt;p&gt;For the sake of simplicity, we'll be using the &lt;code&gt;BASIC&lt;/code&gt; authorization method, which is a standard login form within the browser. If you want to make your own login forms, you can use the method &lt;code&gt;FORM&lt;/code&gt;. We won't cover this for now.&lt;/p&gt;
 
-&lt;p&gt;Also, you have to add security constraints. Security constraints make sure only certain users can acces certain pages. for now, lock every page behind the regular user role that we created. We do this by adding the following snippet:&lt;/p&gt;
+&lt;p&gt;Also, you have to add security constraints. Security constraints make sure only certain users can acces certain pages. For now, lock every page  (&lt;code&gt;/*&lt;/code&gt;)behind the &lt;code&gt;regular_user&lt;/code&gt; role that we created. We do this by adding the following snippet:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;lt;security-constraint&amp;gt;
         &amp;lt;web-resource-collection&amp;gt;

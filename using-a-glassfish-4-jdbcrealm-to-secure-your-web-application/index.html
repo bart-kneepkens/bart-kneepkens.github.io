@@ -23,7 +23,7 @@
     <meta property="og:description" content="Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps: Preparing the database   Configuring a JDBC resource in Glassfish...">
     <meta property="og:url" content="http://localhost:2368/using-a-glassfish-4-jdbcrealm-to-secure-your-web-application/">
     <meta property="article:published_time" content="2016-04-18T10:44:58.349Z">
-    <meta property="article:modified_time" content="2016-04-18T11:53:07.147Z">
+    <meta property="article:modified_time" content="2016-04-18T11:55:42.555Z">
     
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Using a Glassfish 4 JDBCRealm for basic user authorization">
@@ -45,7 +45,7 @@
     "headline": "Using a Glassfish 4 JDBCRealm for basic user authorization",
     "url": "http://localhost:2368/using-a-glassfish-4-jdbcrealm-to-secure-your-web-application/",
     "datePublished": "2016-04-18T10:44:58.349Z",
-    "dateModified": "2016-04-18T11:53:07.147Z",
+    "dateModified": "2016-04-18T11:55:42.555Z",
     "description": "Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps: Preparing the database   Configuring a JDBC resource in Glassfish..."
 }
     </script>
@@ -230,7 +230,7 @@ If you don't have a <code>web.xml</code>, you can generate it from New&gt;Standa
 
 <p>For the sake of simplicity, we'll be using the <code>BASIC</code> authorization method, which is a standard login form within the browser. If you want to make your own login forms, you can use the method <code>FORM</code>. We won't cover this for now.</p>
 
-<p>Also, you have to add security constraints. Security constraints make sure only certain users can acces certain pages. for now, lock every page behind the regular user role that we created. We do this by adding the following snippet:</p>
+<p>Also, you have to add security constraints. Security constraints make sure only certain users can acces certain pages. For now, lock every page  (<code>/*</code>)behind the <code>regular_user</code> role that we created. We do this by adding the following snippet:</p>
 
 <pre><code>&lt;security-constraint&gt;
         &lt;web-resource-collection&gt;
