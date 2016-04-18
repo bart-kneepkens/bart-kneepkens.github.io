@@ -1,4 +1,181 @@
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0"><channel><title>The programming notebook</title><description>I share things that puzzled me at first. I hope to help by sharing my knowledge.</description><link>http://localhost:2368/</link><generator>Ghost 0.7</generator><lastBuildDate>Mon, 18 Apr 2016 09:20:09 GMT</lastBuildDate><atom:link href="http://localhost:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>Welcome to Ghost</title><description>&lt;p&gt;You're live! Nice. We've put together a little post to introduce you to the Ghost editor and get you started. You can manage your content by signing in to the admin area at &lt;code&gt;&amp;lt;your blog URL&amp;gt;/ghost/&lt;/code&gt;. When you arrive, you can select this post from a list&lt;/p&gt;</description><link>http://localhost:2368/welcome-to-ghost/</link><guid isPermaLink="false">498dc92a-b843-4436-ab96-f24fd6ede577</guid><category>Getting Started</category><dc:creator>Bart Kneepkens</dc:creator><pubDate>Sun, 17 Apr 2016 20:29:54 GMT</pubDate><content:encoded>&lt;p&gt;You're live! Nice. We've put together a little post to introduce you to the Ghost editor and get you started. You can manage your content by signing in to the admin area at &lt;code&gt;&amp;lt;your blog URL&amp;gt;/ghost/&lt;/code&gt;. When you arrive, you can select this post from a list on the left and see a preview of it on the right. Click the little pencil icon at the top of the preview to edit this post and read the next section!&lt;/p&gt;
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0"><channel><title>The programming notebook</title><description>I share things that puzzled me at first. I hope to help by sharing my knowledge.</description><link>http://localhost:2368/</link><generator>Ghost 0.7</generator><lastBuildDate>Mon, 18 Apr 2016 10:45:05 GMT</lastBuildDate><atom:link href="http://localhost:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>Using a Glassfish 4 JDBCRealm for basic user authorization</title><description>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Preparing the database  &lt;/li&gt;
+&lt;li&gt;Configuring a JDBC resource in Glassfish  &lt;/li&gt;
+&lt;li&gt;Configuring a JDBC Realm in Glassfish  &lt;/li&gt;
+&lt;li&gt;Configuring your application&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id="prerequisites"&gt;Prerequisites&lt;/h2&gt;</description><link>http://localhost:2368/using-a-glassfish-4-jdbcrealm-to-secure-your-web-application/</link><guid isPermaLink="false">8a846b17-d549-48a1-a163-ef062f629016</guid><dc:creator>Bart Kneepkens</dc:creator><pubDate>Mon, 18 Apr 2016 10:44:58 GMT</pubDate><content:encoded>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Preparing the database  &lt;/li&gt;
+&lt;li&gt;Configuring a JDBC resource in Glassfish  &lt;/li&gt;
+&lt;li&gt;Configuring a JDBC Realm in Glassfish  &lt;/li&gt;
+&lt;li&gt;Configuring your application&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id="prerequisites"&gt;Prerequisites  &lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;MySQL database&lt;/li&gt;
+&lt;li&gt;Glassfish 4&lt;/li&gt;
+&lt;li&gt;Netbeans 8&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Confirm that above are up and running before we start. I also recommend use of a SQL client.&lt;/p&gt;
+
+&lt;p&gt;Make sure you are in a Java EE project. I will be starting off with a stock Maven Web Application, called HelloSecurity. It is merely a hello-world where users need to sign in.  &lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;h2 id="1preparingthedatabase"&gt;1 : Preparing the database  &lt;/h2&gt;
+
+&lt;p&gt;First off, you have to make sure that your database has the right tables for holding your user accounts. You can either use JPA entities or an SQL script to acquire this. You'll have to make 2 entities: one for the user, and one for the user group. Name them anything you want; just don't call them 'User' and 'Group', since those are reserved SQL keywords.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Entity
+public class HelloUser implements Serializable 
+{
+    @Id
+    private String userId;
+
+    private String password;
+
+    @ManyToMany(mappedBy="users")
+    private List&amp;lt;HelloGroup&amp;gt; groups;
+
+    // getters, setters, empty constructor
+}
+
+@Entity
+public class Groups implements Serializable
+{
+    @Id
+    private String groupId;
+
+    @ManyToMany
+    private List&amp;lt;HelloUser&amp;gt; users;
+
+    // getters, setters, empty constructor
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To generate the tables, write some code which persists something to the database. (This is JPA default) &lt;br&gt;
+Make sure the tables are generated, as well as a join table. Take note of the name of this join table.&lt;/p&gt;
+
+&lt;p&gt;In the join table, rename the fields to &lt;code&gt;USERID&lt;/code&gt; and &lt;code&gt;GROUPID&lt;/code&gt;. (This is important!)&lt;/p&gt;
+
+&lt;p&gt;Secondly, add some users to your database. In the groups table, add a row with group name 'regulars'. &lt;br&gt;
+In the users table, add a user with name '&lt;code&gt;steve&lt;/code&gt;' and password '&lt;code&gt;f148389d080cfe85952998a8a367e2f7eaf35f2d72d2599a5b0412fe4094d65c&lt;/code&gt;'. This is the SHA-256 hashed version of 'steve'.&lt;/p&gt;
+
+&lt;p&gt;Lastly add a record to your join table with values '&lt;code&gt;regulars&lt;/code&gt;' and '&lt;code&gt;steve&lt;/code&gt;'.  &lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;h2 id="2configuringajdbcresourceinglassfish"&gt;2. Configuring a JDBC Resource in Glassfish  &lt;/h2&gt;
+
+&lt;p&gt;Start your glassfish server and find your way to the admin panel, which is usually at localhost:8484.&lt;/p&gt;
+
+&lt;p&gt;Next, you should create a JDBC connection pool for your database. You can find the JDBC resources at Resources&gt;JDBC.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="http://athena.fhict.nl/users/i303449/tuts/jdbcloc.png" alt=""&gt;&lt;/p&gt;
+
+&lt;p&gt;First, create a JDBC connection pool, with the following settings:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="http://athena.fhict.nl/users/i303449/tuts/poolsettings.png" alt=""&gt;&lt;/p&gt;
+
+&lt;p&gt;Within 'additional properties', add the properties user, password, URL and give them the &lt;code&gt; values root, root and jdbc:mysql://localhost:3306/hellosecurity &lt;/code&gt; &lt;br&gt;
+(of course, change the values to the ones of your database)&lt;/p&gt;
+
+&lt;p&gt;Performance-wise, you can choose to set the 'Initial and minimum pool size' to 0, so your glassfish will eat up less of your machine's resources. Rethink this when deploying to a production environment!&lt;/p&gt;
+
+&lt;p&gt;Lastly, create a JDBC resource with the following settings:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="http://athena.fhict.nl/users/i303449/tuts/resource.png" alt=""&gt;&lt;/p&gt;
+
+&lt;p&gt;Thats it for configuring the JDBC resource!&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;h2 id="3configuringajdbcrealminglassfish"&gt;3. Configuring a JDBC Realm in Glassfish  &lt;/h2&gt;
+
+&lt;p&gt;To configure your security realm, go to Configuration&gt; server-config&gt;Security&gt;Realms.&lt;/p&gt;
+
+&lt;p&gt;Add a new realm, and give a name to it. For this tutorial, call it &lt;code&gt;security_realm&lt;/code&gt;. For 'Class Name', use &lt;code&gt;com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm&lt;/code&gt;. &lt;/p&gt;
+
+&lt;p&gt;&lt;img src="http://athena.fhict.nl/users/i303449/tuts/realmconf.png" alt=""&gt;&lt;/p&gt;
+
+&lt;p&gt;A form should pop up for this Realm's properties. &lt;br&gt;
+Fill in as follows:&lt;/p&gt;
+
+&lt;table&gt;  
+&lt;tr&gt;&lt;td&gt;JAAS Context&lt;/td&gt; &lt;td&gt;jdbcRealm&lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;JNDI&lt;/td&gt; &lt;td&gt;security_resource&lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;User Table&lt;/td&gt; &lt;td&gt;HELLOGROUPS_HELLOUSER&lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;Password Column&lt;/td&gt; &lt;td&gt;PASSWORD&lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;Group Table&lt;/td&gt; &lt;td&gt;HELLOGROUPS_HELLOUSER&lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;Goup Table Username Column&lt;/td&gt; &lt;td&gt;USERID&lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;Goup Name Column&lt;/td&gt; &lt;td&gt;GROUPID&lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;Password Encryption Algorithm&lt;/td&gt; &lt;td&gt; AES &lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;Digest Algorithm&lt;/td&gt; &lt;td&gt;SHA-256&lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt; Charset &lt;/td&gt; &lt;td&gt;UTF-8&lt;/td&gt;&lt;/tr&gt;  
+&lt;/table&gt;
+
+&lt;p&gt;Check and make sure the table and column names you filled in are the same as in the Database; Glassfish will not give error messages if these are wrong.&lt;/p&gt;
+
+&lt;p&gt;We're almost done here. Lastly, go to the 'Security' page in glass fish, and make sure the following two properties are checked: &lt;br&gt;
+Security Manager : Enabled &lt;br&gt;
+Default Principal to Role mapping : Enabled&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;h2 id="4configuringyourapplication"&gt;4: Configuring your application  &lt;/h2&gt;
+
+&lt;p&gt;The last step is to configure your project for using the Realm. In your &lt;code&gt;web.xml&lt;/code&gt; you should set some properties. &lt;br&gt;
+If you don't have a &lt;code&gt;web.xml&lt;/code&gt;, you can generate it from New&gt;Standard Deployment Descriptor.&lt;/p&gt;
+
+&lt;p&gt;Add the following snippet:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;login-config&amp;gt;
+        &amp;lt;auth-method&amp;gt;BASIC&amp;lt;/auth-method&amp;gt;
+        &amp;lt;realm-name&amp;gt;security_realm&amp;lt;/realm-name&amp;gt;
+&amp;lt;/login-config&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For the sake of simplicity, we'll be using the &lt;code&gt;BASIC&lt;/code&gt; authorization method, which is a standard login form within the browser. If you want to make your own login forms, you can use the method &lt;code&gt;FORM&lt;/code&gt;. We won't cover this for now.&lt;/p&gt;
+
+&lt;p&gt;Also, you have to add security constraints. Security constraints make sure only certain users can acces certain pages. for now, lock every page behind the regular user role that we created. We do this by adding the following snippet:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;security-constraint&amp;gt;
+        &amp;lt;web-resource-collection&amp;gt;
+            &amp;lt;web-resource-name&amp;gt;Secure Pages&amp;lt;/web-resource-name&amp;gt;
+            &amp;lt;description/&amp;gt;
+            &amp;lt;url-pattern&amp;gt;/*&amp;lt;/url-pattern&amp;gt;
+        &amp;lt;/web-resource-collection&amp;gt;
+        &amp;lt;auth-constraint&amp;gt;
+            &amp;lt;role-name&amp;gt;regular_role&amp;lt;/role-name&amp;gt;
+        &amp;lt;/auth-constraint&amp;gt;
+&amp;lt;/security-constraint&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Take note of the role-name, regular_user. We will need it in the next step.&lt;/p&gt;
+
+&lt;p&gt;Open your glassfish deployment descriptor. It is called &lt;code&gt;sun-web.xml&lt;/code&gt; or &lt;code&gt;glassfish-web.xml&lt;/code&gt; and should be in your &lt;code&gt;WEB-INF&lt;/code&gt; folder. If not, (in NetBeans 8) right-click this folder and go to New&gt; Glassfish descriptor. &lt;/p&gt;
+
+&lt;p&gt;In this descriptor, roles within your application are mapped to certain groups in your database. Add the following snippet:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;security-role-mapping&amp;gt;
+    &amp;lt;role-name&amp;gt;regular_role&amp;lt;/role-name&amp;gt;
+    &amp;lt;group-name&amp;gt;regulars&amp;lt;/group-name&amp;gt;
+&amp;lt;/security-role-mapping&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And make sure the group-name is exactly the same as in your database.&lt;/p&gt;
+
+&lt;h1 id="thatsit"&gt;That's it!  &lt;/h1&gt;
+
+&lt;p&gt;Go ahead and test it out. Run your project, and the website should ask you to sign in. Fill in 'steve' and 'steve' for both username and password, and you should be able to sign in!&lt;/p&gt;</content:encoded></item><item><title>Welcome to Ghost</title><description>&lt;p&gt;You're live! Nice. We've put together a little post to introduce you to the Ghost editor and get you started. You can manage your content by signing in to the admin area at &lt;code&gt;&amp;lt;your blog URL&amp;gt;/ghost/&lt;/code&gt;. When you arrive, you can select this post from a list&lt;/p&gt;</description><link>http://localhost:2368/welcome-to-ghost/</link><guid isPermaLink="false">498dc92a-b843-4436-ab96-f24fd6ede577</guid><category>Getting Started</category><dc:creator>Bart Kneepkens</dc:creator><pubDate>Sun, 17 Apr 2016 20:29:54 GMT</pubDate><content:encoded>&lt;p&gt;You're live! Nice. We've put together a little post to introduce you to the Ghost editor and get you started. You can manage your content by signing in to the admin area at &lt;code&gt;&amp;lt;your blog URL&amp;gt;/ghost/&lt;/code&gt;. When you arrive, you can select this post from a list on the left and see a preview of it on the right. Click the little pencil icon at the top of the preview to edit this post and read the next section!&lt;/p&gt;
 
 &lt;h2 id="gettingstarted"&gt;Getting Started&lt;/h2&gt;
 
