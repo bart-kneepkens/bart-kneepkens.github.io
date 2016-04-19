@@ -1,4 +1,4 @@
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0"><channel><title>The programming notebook</title><description>I share things that puzzled me at first. I hope to help by sharing my knowledge.</description><link>http://localhost:2368/</link><generator>Ghost 0.7</generator><lastBuildDate>Mon, 18 Apr 2016 12:06:27 GMT</lastBuildDate><atom:link href="http://localhost:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>Using a Glassfish 4 JDBCRealm for basic user authorization</title><description>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0"><channel><title>The programming notebook</title><description>I share things that puzzled me at first. I hope to help by sharing my knowledge.</description><link>http://localhost:2368/</link><generator>Ghost 0.7</generator><lastBuildDate>Tue, 19 Apr 2016 15:38:34 GMT</lastBuildDate><atom:link href="http://localhost:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>Using a Glassfish 4 JDBCRealm for basic user authorization</title><description>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;Preparing the database  &lt;/li&gt;
@@ -49,7 +49,7 @@ public class HelloUser implements Serializable
 }
 
 @Entity
-public class Groups implements Serializable
+public class HelloGroup implements Serializable
 {
     @Id
     private String groupId;
@@ -85,8 +85,23 @@ In the users table, add a user with name '&lt;code&gt;steve&lt;/code&gt;' and pa
 
 &lt;p&gt;&lt;img src="http://athena.fhict.nl/users/i303449/tuts/poolsettings.png" alt=""&gt;&lt;/p&gt;
 
-&lt;p&gt;Within 'additional properties', add the properties user, password, URL and give them the &lt;code&gt; values root, root and jdbc:mysql://localhost:3306/hellosecurity &lt;/code&gt; &lt;br&gt;
-(of course, change the values to the ones of your database)&lt;/p&gt;
+&lt;p&gt;Within 'additional properties', add the following properties. &lt;br&gt;
+(of course, change the values to your database credentials!)&lt;/p&gt;
+
+&lt;table&gt;  
+  &lt;tr&gt;
+    &lt;td&gt;URL&lt;/td&gt;
+    &lt;td&gt;jdbc:mysql://localhost:3306/hellosecurity
+  &lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;user&lt;/td&gt;
+    &lt;td&gt;root&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;password&lt;/td&gt;
+    &lt;td&gt;root&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
 
 &lt;p&gt;Performance-wise, you can choose to set the 'Initial and minimum pool size' to 0, so your glassfish will eat up less of your machine's resources. Rethink this when deploying to a production environment!&lt;/p&gt;
 
@@ -112,7 +127,7 @@ Fill in as follows:&lt;/p&gt;
 &lt;table&gt;  
 &lt;tr&gt;&lt;td&gt;JAAS Context&lt;/td&gt; &lt;td&gt;jdbcRealm&lt;/td&gt;&lt;/tr&gt;  
 &lt;tr&gt;&lt;td&gt;JNDI&lt;/td&gt; &lt;td&gt;security_resource&lt;/td&gt;&lt;/tr&gt;  
-&lt;tr&gt;&lt;td&gt;User Table&lt;/td&gt; &lt;td&gt;HELLOGROUPS_HELLOUSER&lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;User Table&lt;/td&gt; &lt;td&gt;HELLOUSER&lt;/td&gt;&lt;/tr&gt;  
 &lt;tr&gt;&lt;td&gt;Password Column&lt;/td&gt; &lt;td&gt;PASSWORD&lt;/td&gt;&lt;/tr&gt;  
 &lt;tr&gt;&lt;td&gt;Group Table&lt;/td&gt; &lt;td&gt;HELLOGROUPS_HELLOUSER&lt;/td&gt;&lt;/tr&gt;  
 &lt;tr&gt;&lt;td&gt;Goup Table Username Column&lt;/td&gt; &lt;td&gt;USERID&lt;/td&gt;&lt;/tr&gt;  

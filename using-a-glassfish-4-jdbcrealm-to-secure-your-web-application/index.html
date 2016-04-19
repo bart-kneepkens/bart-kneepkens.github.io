@@ -11,7 +11,7 @@
 
     <link rel="shortcut icon" href="../favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=6b7f02c620">
+    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=3d78aa6bdb">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic%7COpen+Sans:700,400">
 
     <link rel="canonical" href="index.html">
@@ -23,7 +23,7 @@
     <meta property="og:description" content="Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps: Preparing the database   Configuring a JDBC resource in Glassfish...">
     <meta property="og:url" content="http://localhost:2368/using-a-glassfish-4-jdbcrealm-to-secure-your-web-application/">
     <meta property="article:published_time" content="2016-04-18T10:44:58.349Z">
-    <meta property="article:modified_time" content="2016-04-18T12:06:04.361Z">
+    <meta property="article:modified_time" content="2016-04-19T15:38:15.878Z">
     
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Using a Glassfish 4 JDBCRealm for basic user authorization">
@@ -45,7 +45,7 @@
     "headline": "Using a Glassfish 4 JDBCRealm for basic user authorization",
     "url": "http://localhost:2368/using-a-glassfish-4-jdbcrealm-to-secure-your-web-application/",
     "datePublished": "2016-04-18T10:44:58.349Z",
-    "dateModified": "2016-04-18T12:06:04.361Z",
+    "dateModified": "2016-04-19T15:38:15.878Z",
     "description": "Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps: Preparing the database   Configuring a JDBC resource in Glassfish..."
 }
     </script>
@@ -134,7 +134,7 @@ public class HelloUser implements Serializable
 }
 
 @Entity
-public class Groups implements Serializable
+public class HelloGroup implements Serializable
 {
     @Id
     private String groupId;
@@ -170,8 +170,23 @@ In the users table, add a user with name '<code>steve</code>' and password '<cod
 
 <p><img src="http://athena.fhict.nl/users/i303449/tuts/poolsettings.png" alt=""></p>
 
-<p>Within 'additional properties', add the properties user, password, URL and give them the <code> values root, root and jdbc:mysql://localhost:3306/hellosecurity </code> <br>
-(of course, change the values to the ones of your database)</p>
+<p>Within 'additional properties', add the following properties. <br>
+(of course, change the values to your database credentials!)</p>
+
+<table>  
+  <tr>
+    <td>URL</td>
+    <td>jdbc:mysql://localhost:3306/hellosecurity
+  </td></tr>
+  <tr>
+    <td>user</td>
+    <td>root</td>
+  </tr>
+  <tr>
+    <td>password</td>
+    <td>root</td>
+  </tr>
+</table>
 
 <p>Performance-wise, you can choose to set the 'Initial and minimum pool size' to 0, so your glassfish will eat up less of your machine's resources. Rethink this when deploying to a production environment!</p>
 
@@ -197,7 +212,7 @@ Fill in as follows:</p>
 <table>  
 <tr><td>JAAS Context</td> <td>jdbcRealm</td></tr>  
 <tr><td>JNDI</td> <td>security_resource</td></tr>  
-<tr><td>User Table</td> <td>HELLOGROUPS_HELLOUSER</td></tr>  
+<tr><td>User Table</td> <td>HELLOUSER</td></tr>  
 <tr><td>Password Column</td> <td>PASSWORD</td></tr>  
 <tr><td>Group Table</td> <td>HELLOGROUPS_HELLOUSER</td></tr>  
 <tr><td>Goup Table Username Column</td> <td>USERID</td></tr>  
@@ -317,7 +332,7 @@ If you don't have a <code>web.xml</code>, you can generate it from New&gt;Standa
     
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=6b7f02c620"></script>
-    <script type="text/javascript" src="../assets/js/index.js?v=6b7f02c620"></script>
+    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=3d78aa6bdb"></script>
+    <script type="text/javascript" src="../assets/js/index.js?v=3d78aa6bdb"></script>
 
 </body>
