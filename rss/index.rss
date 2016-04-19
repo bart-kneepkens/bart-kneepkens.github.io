@@ -1,4 +1,4 @@
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0"><channel><title>The programming notebook</title><description>I share things that puzzled me at first. I hope to help by sharing my knowledge.</description><link>http://localhost:2368/</link><generator>Ghost 0.7</generator><lastBuildDate>Tue, 19 Apr 2016 15:38:34 GMT</lastBuildDate><atom:link href="http://localhost:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>Using a Glassfish 4 JDBCRealm for basic user authorization</title><description>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0"><channel><title>The programming notebook</title><description>I share things that puzzled me at first. I hope to help by sharing my knowledge.</description><link>http://localhost:2368/</link><generator>Ghost 0.7</generator><lastBuildDate>Tue, 19 Apr 2016 15:57:40 GMT</lastBuildDate><atom:link href="http://localhost:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>Using a Glassfish 4 JDBCRealm for basic user authorization</title><description>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;Preparing the database  &lt;/li&gt;
@@ -7,7 +7,7 @@
 &lt;li&gt;Configuring your application&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id="prerequisites"&gt;Prerequisites&lt;/h2&gt;</description><link>http://localhost:2368/using-a-glassfish-4-jdbcrealm-to-secure-your-web-application/</link><guid isPermaLink="false">8a846b17-d549-48a1-a163-ef062f629016</guid><dc:creator>Bart Kneepkens</dc:creator><pubDate>Mon, 18 Apr 2016 10:44:58 GMT</pubDate><content:encoded>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
+&lt;h2 id="prerequisites"&gt;Prerequisites&lt;/h2&gt;</description><link>http://localhost:2368/using-a-glassfish-4-jdbcrealm-to-secure-your-web-application/</link><guid isPermaLink="false">8a846b17-d549-48a1-a163-ef062f629016</guid><category>Java EE</category><category>JDBC Realms</category><category>Glassfish</category><category>MySQL</category><dc:creator>Bart Kneepkens</dc:creator><pubDate>Mon, 18 Apr 2016 10:44:58 GMT</pubDate><content:encoded>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;Preparing the database  &lt;/li&gt;
@@ -192,8 +192,16 @@ If you don't have a &lt;code&gt;web.xml&lt;/code&gt;, you can generate it from N
 
 &lt;h1 id="thatsit"&gt;That's it!  &lt;/h1&gt;
 
-&lt;p&gt;Go ahead and test it out. Run your project, and the website should ask you to sign in. Fill in 'steve' and 'steve' for both username and password, and you should be able to sign in!&lt;/p&gt;
+&lt;p&gt;Go ahead and test it out. Run your project, and the website should ask you to sign in. Fill in 'steve' and 'steve' for both username and password, and have fun!&lt;/p&gt;
 
 &lt;p&gt;You can find the source code of this tutorial on my &lt;a href="https://github.com/bart-kneepkens/JDBCRealmTutorial/tree/master/HelloSecurity"&gt;github&lt;/a&gt;.&lt;/p&gt;
 
-&lt;hr&gt;</content:encoded></item></channel></rss>
+&lt;hr&gt;
+
+&lt;h2 id="anoteaboutsecurity"&gt;A note about security  &lt;/h2&gt;
+
+&lt;p&gt;Think thoroughly about securing your (web) applications. &lt;/p&gt;
+
+&lt;p&gt;While Realms might be able to secure a your application to a certain extend, I don't agree with the act of leaving the responsibility blindly with a container, such as Glassfish. &lt;/p&gt;
+
+&lt;p&gt;Realms are okay for basic user authorization. To ensure a truly secure application, take more actions!&lt;/p&gt;</content:encoded></item></channel></rss>
