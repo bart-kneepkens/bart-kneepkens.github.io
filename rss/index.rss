@@ -1,4 +1,4 @@
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0"><channel><title>The programming notebook</title><description>I share things that puzzled me at first. I hope to help by sharing my knowledge.</description><link>http://localhost:2368/</link><generator>Ghost 0.7</generator><lastBuildDate>Tue, 19 Apr 2016 15:57:40 GMT</lastBuildDate><atom:link href="http://localhost:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>Using a Glassfish 4 JDBCRealm for basic user authorization</title><description>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0"><channel><title>The programming notebook</title><description>I share things that puzzled me at first. I hope to help by sharing my knowledge.</description><link>http://localhost:2368/</link><generator>Ghost 0.7</generator><lastBuildDate>Tue, 26 Apr 2016 20:33:59 GMT</lastBuildDate><atom:link href="http://localhost:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>Using a Glassfish 4 JDBCRealm for basic user authorization</title><description>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;Preparing the database  &lt;/li&gt;
@@ -32,42 +32,52 @@
 
 &lt;h2 id="1preparingthedatabase"&gt;1 : Preparing the database  &lt;/h2&gt;
 
-&lt;p&gt;First off, you have to make sure that your database has the right tables for holding your user accounts. You can either use JPA entities or an SQL script to acquire this. You'll have to make 2 entities: one for the user, and one for the user group. Name them anything you want; just don't call them 'User' and 'Group', since those are reserved SQL keywords.&lt;/p&gt;
+&lt;p&gt;First off, you have to make sure that your database has the right tables for holding your user accounts. You can either use JPA entities or an SQL script to acquire this. You'll have to make 2 entities: one for the user, and one for the user group. Name them anything you want; just make sure their tables are &lt;u&gt;NOT&lt;/u&gt; called 'User' and 'Group', since those are reserved SQL keywords.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;@Entity
-public class HelloUser implements Serializable 
+@Table(name = "HelloUser")
+public class User implements Serializable 
 {
     @Id
-    private String userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String userName;
 
     private String password;
 
-    @ManyToMany(mappedBy="users")
-    private List&amp;lt;HelloGroup&amp;gt; groups;
+    @ManyToMany(mappedBy = "users")
+    private List&amp;lt;Group&amp;gt; groups;
 
-    // getters, setters, empty constructor
+    // getters, setters, no-arg constructor
 }
 
 @Entity
-public class HelloGroup implements Serializable
+@Table(name = "HelloGroup")
+public class Group implements Serializable
 {
     @Id
-    private String groupId;
+    private String groupName;
 
     @ManyToMany
-    private List&amp;lt;HelloUser&amp;gt; users;
+    @JoinTable(name="USER_GROUP",
+    joinColumns = @JoinColumn(name = "groupName", 
+        referencedColumnName = "groupName"), 
+    inverseJoinColumns = @JoinColumn(name = "userName", 
+        referencedColumnName = "userName"))
 
-    // getters, setters, empty constructor
+    private List&amp;lt;User&amp;gt; users;
+
+    // getters, setters, no-arg constructor
 }
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;To generate the tables, write some code which persists something to the database. (This is JPA default) &lt;br&gt;
-Make sure the tables are generated, as well as a join table. Take note of the name of this join table.&lt;/p&gt;
+Make sure the tables are generated, as well as a join table. Take note of the name of this join table (USER_GROUP).&lt;/p&gt;
 
-&lt;p&gt;In the join table, rename the fields to &lt;code&gt;USERID&lt;/code&gt; and &lt;code&gt;GROUPID&lt;/code&gt;. (This is important!)&lt;/p&gt;
+&lt;p&gt;Secondly, add some users to your database. In the groups table, add a row with group name '&lt;code&gt;regulars&lt;/code&gt;'.&lt;/p&gt;
 
-&lt;p&gt;Secondly, add some users to your database. In the groups table, add a row with group name 'regulars'. &lt;br&gt;
-In the users table, add a user with name '&lt;code&gt;steve&lt;/code&gt;' and password '&lt;code&gt;f148389d080cfe85952998a8a367e2f7eaf35f2d72d2599a5b0412fe4094d65c&lt;/code&gt;'. This is the SHA-256 hashed version of 'steve'.&lt;/p&gt;
+&lt;p&gt;In the users table, add a user with name '&lt;code&gt;steve&lt;/code&gt;' and password '&lt;code&gt;f148389d080cfe85952998a8a367e2f7eaf35f2d72d2599a5b0412fe4094d65c&lt;/code&gt;'. This is the SHA-256 hashed version of 'steve'.&lt;/p&gt;
 
 &lt;p&gt;Lastly add a record to your join table with values '&lt;code&gt;regulars&lt;/code&gt;' and '&lt;code&gt;steve&lt;/code&gt;'.  &lt;/p&gt;
 
@@ -75,7 +85,7 @@ In the users table, add a user with name '&lt;code&gt;steve&lt;/code&gt;' and pa
 
 &lt;h2 id="2configuringajdbcresourceinglassfish"&gt;2. Configuring a JDBC Resource in Glassfish  &lt;/h2&gt;
 
-&lt;p&gt;Start your glassfish server and find your way to the admin panel, which is usually at localhost:8484.&lt;/p&gt;
+&lt;p&gt;Start your glassfish server and find your way to the admin panel, which is usually at localhost:4848.&lt;/p&gt;
 
 &lt;p&gt;Next, you should create a JDBC connection pool for your database. You can find the JDBC resources at Resources&gt;JDBC.&lt;/p&gt;
 
@@ -86,7 +96,7 @@ In the users table, add a user with name '&lt;code&gt;steve&lt;/code&gt;' and pa
 &lt;p&gt;&lt;img src="http://athena.fhict.nl/users/i303449/tuts/poolsettings.png" alt=""&gt;&lt;/p&gt;
 
 &lt;p&gt;Within 'additional properties', add the following properties. &lt;br&gt;
-(of course, change the values to your database credentials!)&lt;/p&gt;
+&lt;u&gt;(of course, change the values to your database credentials!)&lt;/u&gt;  &lt;/p&gt;
 
 &lt;table&gt;  
   &lt;tr&gt;
@@ -103,7 +113,7 @@ In the users table, add a user with name '&lt;code&gt;steve&lt;/code&gt;' and pa
   &lt;/tr&gt;
 &lt;/table&gt;
 
-&lt;p&gt;Performance-wise, you can choose to set the 'Initial and minimum pool size' to 0, so your glassfish will eat up less of your machine's resources. Rethink this when deploying to a production environment!&lt;/p&gt;
+&lt;p&gt;Performance-wise, you can choose to set the 'Initial and minimum pool size' to 0, so your Glassfish will eat up less of your machine's resources. Rethink this when deploying to a production environment!&lt;/p&gt;
 
 &lt;p&gt;Lastly, create a JDBC resource with the following settings:&lt;/p&gt;
 
@@ -129,9 +139,9 @@ Fill in as follows:&lt;/p&gt;
 &lt;tr&gt;&lt;td&gt;JNDI&lt;/td&gt; &lt;td&gt;security_resource&lt;/td&gt;&lt;/tr&gt;  
 &lt;tr&gt;&lt;td&gt;User Table&lt;/td&gt; &lt;td&gt;HELLOUSER&lt;/td&gt;&lt;/tr&gt;  
 &lt;tr&gt;&lt;td&gt;Password Column&lt;/td&gt; &lt;td&gt;PASSWORD&lt;/td&gt;&lt;/tr&gt;  
-&lt;tr&gt;&lt;td&gt;Group Table&lt;/td&gt; &lt;td&gt;HELLOGROUPS_HELLOUSER&lt;/td&gt;&lt;/tr&gt;  
-&lt;tr&gt;&lt;td&gt;Goup Table Username Column&lt;/td&gt; &lt;td&gt;USERID&lt;/td&gt;&lt;/tr&gt;  
-&lt;tr&gt;&lt;td&gt;Goup Name Column&lt;/td&gt; &lt;td&gt;GROUPID&lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;Group Table&lt;/td&gt; &lt;td&gt;USER_GROUP&lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;Goup Table Username Column&lt;/td&gt; &lt;td&gt;USERNAME&lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;Goup Name Column&lt;/td&gt; &lt;td&gt;GROUPNAME&lt;/td&gt;&lt;/tr&gt;  
 &lt;tr&gt;&lt;td&gt;Password Encryption Algorithm&lt;/td&gt; &lt;td&gt; AES &lt;/td&gt;&lt;/tr&gt;  
 &lt;tr&gt;&lt;td&gt;Digest Algorithm&lt;/td&gt; &lt;td&gt;SHA-256&lt;/td&gt;&lt;/tr&gt;  
 &lt;tr&gt;&lt;td&gt; Charset &lt;/td&gt; &lt;td&gt;UTF-8&lt;/td&gt;&lt;/tr&gt;  
@@ -139,9 +149,9 @@ Fill in as follows:&lt;/p&gt;
 
 &lt;p&gt;Check and make sure the table and column names you filled in are the same as in the Database; Glassfish will not give error messages if these are wrong.&lt;/p&gt;
 
-&lt;p&gt;We're almost done here. Lastly, go to the 'Security' page in glass fish, and make sure the following two properties are checked: &lt;br&gt;
-Security Manager : Enabled &lt;br&gt;
-Default Principal to Role mapping : Enabled&lt;/p&gt;
+&lt;p&gt;We're almost done here. Lastly, go to the 'Security' page in Glassfish, and make sure the following property is checked:&lt;/p&gt;
+
+&lt;p&gt;Default Principal to Role mapping : Enabled&lt;/p&gt;
 
 &lt;hr&gt;
 
