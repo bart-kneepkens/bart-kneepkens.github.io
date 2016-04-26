@@ -23,7 +23,7 @@
     <meta property="og:description" content="Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps: Preparing the database   Configuring a JDBC resource in Glassfish...">
     <meta property="og:url" content="http://localhost:2368/using-a-glassfish-4-jdbcrealm-to-secure-your-web-application/">
     <meta property="article:published_time" content="2016-04-18T10:44:58.349Z">
-    <meta property="article:modified_time" content="2016-04-26T20:33:46.942Z">
+    <meta property="article:modified_time" content="2016-04-26T20:35:07.457Z">
     <meta property="article:tag" content="Java EE">
     <meta property="article:tag" content="JDBC Realms">
     <meta property="article:tag" content="Glassfish">
@@ -50,7 +50,7 @@
     "headline": "Using a Glassfish 4 JDBCRealm for basic user authorization",
     "url": "http://localhost:2368/using-a-glassfish-4-jdbcrealm-to-secure-your-web-application/",
     "datePublished": "2016-04-18T10:44:58.349Z",
-    "dateModified": "2016-04-26T20:33:46.942Z",
+    "dateModified": "2016-04-26T20:35:07.457Z",
     "keywords": "Java EE, JDBC Realms, Glassfish, MySQL",
     "description": "Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps: Preparing the database   Configuring a JDBC resource in Glassfish..."
 }
@@ -156,7 +156,6 @@ public class Group implements Serializable
         referencedColumnName = "groupName"), 
     inverseJoinColumns = @JoinColumn(name = "userName", 
         referencedColumnName = "userName"))
-
     private List&lt;User&gt; users;
 
     // getters, setters, no-arg constructor
