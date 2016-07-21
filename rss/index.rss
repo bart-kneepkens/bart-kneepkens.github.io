@@ -1,4 +1,69 @@
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0"><channel><title>The programming notebook</title><description>I share things that puzzled me at first. I hope to help by sharing my knowledge.</description><link>http://localhost:2368/</link><generator>Ghost 0.7</generator><lastBuildDate>Tue, 26 Apr 2016 20:35:14 GMT</lastBuildDate><atom:link href="http://localhost:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>Using a Glassfish 4 JDBCRealm for basic user authorization</title><description>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0"><channel><title>The programming notebook</title><description>I share things that puzzled me at first. I hope to help by sharing my knowledge.</description><link>http://localhost:2368/</link><generator>Ghost 0.7</generator><lastBuildDate>Thu, 21 Jul 2016 22:44:01 GMT</lastBuildDate><atom:link href="http://localhost:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>Localizing your apps in Xcode</title><description>&lt;p&gt;If you want to localize your iOS, tvOS, WatchOS or OS X apps, there are a few ways for you to do so, which will be explained shortly in this post.&lt;/p&gt;
+
+&lt;h2 id="methodabaselocalization"&gt;Method A : Base localization  &lt;/h2&gt;
+
+&lt;p&gt;Base localization makes use of your storyboard or xib files. &lt;/p&gt;
+
+&lt;p&gt;In short: you can configure&lt;/p&gt;</description><link>http://localhost:2368/localizing-your-apps-in-xcode/</link><guid isPermaLink="false">b8e4371f-7956-4932-a608-1d7dde1cf080</guid><dc:creator>Bart Kneepkens</dc:creator><pubDate>Thu, 21 Jul 2016 22:43:26 GMT</pubDate><content:encoded>&lt;p&gt;If you want to localize your iOS, tvOS, WatchOS or OS X apps, there are a few ways for you to do so, which will be explained shortly in this post.&lt;/p&gt;
+
+&lt;h2 id="methodabaselocalization"&gt;Method A : Base localization  &lt;/h2&gt;
+
+&lt;p&gt;Base localization makes use of your storyboard or xib files. &lt;/p&gt;
+
+&lt;p&gt;In short: you can configure an existing view to use other languages. This is essentially handy when you build your app using the Interface Builder. &lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;(For information on how to do this, see &lt;a href="http://www.appcoda.com/ios-programming-tutorial-localization-apps/"&gt;this&lt;/a&gt; handy tutorial on Appcoda.)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;There are however some pitfalls to this method:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;When you change something in your original Storyboard or xib, the localization files aren't automatically updated as well 🤔. &lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;It is cumbersome to change the base localization from within the app, without restarting it. 
+There is no 'official' way to do this, but it should be possible by using the &lt;a href="https://github.com/maximbilan/ios_language_manager"&gt;iOS Language Manager&lt;/a&gt; library.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id="methodblocalizationincode"&gt;Method B : Localization in code  &lt;/h2&gt;
+
+&lt;p&gt;In code, you can localize string easily by placing them in a file called Localizable.strings, and using the NSLocalizedString() function.&lt;/p&gt;
+
+&lt;p&gt;Some developers don't use the interface builder at all.  For them, this is the only option.&lt;/p&gt;
+
+&lt;p&gt;However, for developers who do use the interface builder, this is also an option. &lt;/p&gt;
+
+&lt;p&gt;The pitfalls of using interface builder, and in-code localization (assumed you have set the base text in interface builder):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;You'll somehow need to set all the elements that have localized text in them. This could be done by using IBOutlets, or by finding them by tag.  Either way, this is usually not what you want. It makes for lots of boilerplate code, and will mess up your view controllers.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Sometimes the text can be set by Interface Builder, while sometimes it will be set in code. 
+This is inconsistent, and extending behavior could be cumbersome.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id="conclusion"&gt;Conclusion  &lt;/h2&gt;
+
+&lt;p&gt;There is no golden path here. You should determine which one of the methods suits you best. All of them have their set of advantages and downsides.&lt;/p&gt;
+
+&lt;p&gt;However, here is some advice: &lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;If you create your views entirely in code.&lt;/strong&gt; &lt;br&gt;
+Use NSLocalizedString in combination with Localized.strings file. Basically, you're golden, since you have no choice. 👍🏼&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;If you use Interface Builder, and the language needs to be changeable from within the app.&lt;/strong&gt; &lt;br&gt;
+This is a tricky one. Check if you can get the base localization to change with &lt;a href="https://github.com/maximbilan/ios_language_manager"&gt;iOS Language Manager&lt;/a&gt; . If so, convert your storyboard strings to other languages. &lt;br&gt;
+If not, you should use NSLocalizedString in combination with Localized.strings file, and set the views manually from within your ViewController.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;If you work sprint-based (like agile) and use Interface Builder.&lt;/strong&gt; &lt;br&gt;
+You're most likely fine using Base localization. You can use &lt;a href="https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/ibtool.1.html"&gt;ibtool&lt;/a&gt; or &lt;a href="https://github.com/Flinesoft/BartyCrouch"&gt;BartyCrouch&lt;/a&gt; to help you keep your files up to date.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;h6&gt;About this post&lt;/h6&gt;&lt;/center&gt;
+I've written this post as a result of a school assignment. The assignment included an iOS app with localization. &lt;/p&gt;
+
+&lt;p&gt;Enthusiastically  I started using Base localization and made the app bilingual. Then it struck me; the user had to be able to choose between languages. 😵  &lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;This needed demystifying.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Even though Apple seems to encourage the use of Interface Builder, localization options are limited. As a Interface Builder enthusiast, I hope the functionality will soon be extended. &lt;/p&gt;
+
+&lt;p&gt;For now I can't fully rely on Interface Builder, since stuff like UIAlertController still needs to be set in code. This makes for a mix of Base localization and localization in code. I'd rather have it centralized.&lt;/p&gt;</content:encoded></item><item><title>Using a Glassfish 4 JDBCRealm for basic user authorization</title><description>&lt;p&gt;Glassfish offers a built-in security mechanism called Realms to secure your web application. In this tutorial, setting up your own JDBC Realm will be covered. This consists of the following steps:&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;Preparing the database  &lt;/li&gt;
