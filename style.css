@@ -1,0 +1,40 @@
+body {
+  font-family: "Helvetica", sans-serif;
+  text-align: center;
+}
+
+.container {
+  border-style: solid;
+  border-width: thin;
+  display: table;
+  width:30%;
+  padding: 2% 5%;
+  margin: auto;
+  margin-top: 8%;
+}
+
+.container p{
+  text-align: center;
+  font-weight: lighter;
+}
+
+.links {
+  margin-top: 1%;
+}
+
+.links ul {
+  text-decoration: none;
+  list-style: none;
+  margin: auto;
+  padding: 0;
+}
+
+.links li {
+  display: inline;
+}
+
+blockquote {
+  font-family: "Arial", sans-serif;
+  font-style: italic;
+  padding: 0px;
+}
